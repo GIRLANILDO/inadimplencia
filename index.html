@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inadimplência Óticas - Gestão Profissional</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-neon: #00f2ff;
+            --secondary-neon: #7000ff;
+            --bg-dark: #050505;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.25);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: #fff;
+            overflow-x: hidden;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* EFEITO DE EMBAÇAR VALORES */
+        .blur-text {
+            filter: blur(6px);
+            user-select: none;
+            pointer-events: none;
+        }
+
+        .bg-animate {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            background: linear-gradient(45deg, #050505, #0a0a1a, #1a0525, #050505);
+            background-size: 400% 400%; animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .glass-card {
+            background: var(--glass-bg); backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px); border: 1px solid var(--glass-border);
+            border-radius: 20px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+        }
+
+        .form-control, .form-select {
+            background: rgba(0, 0, 0, 0.6) !important;
+            border: 1px solid var(--glass-border) !important;
+            color: #fff !important;
+            padding: 12px;
+            border-radius: 10px;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background: rgba(0, 0, 0, 0.8) !important;
+            border-color: var(--primary-neon) !important;
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.4) !important;
+            outline: none;
+        }
+
+        .brand-logo {
+            font-weight: 800; font-size: 1.8rem; text-align: center; margin-bottom: 30px;
+            background: linear-gradient(to right, var(--primary-neon), var(--secondary-neon));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            letter-spacing: -1px; text-transform: uppercase;
+        }
+
+        .btn-neon {
+            background: linear-gradient(45deg, var(--secondary-neon), var(--primary-neon));
+            border: none; color: white; font-weight: 600; padding: 12px;
+            border-radius: 10px; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        .sidebar {
+            min-height: 100vh; background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px); border-right: 1px solid var(--glass-border);
+        }
+
+        .nav-link-custom {
+            color: rgba(255,255,255,0.7); padding: 15px; border-radius: 10px;
+            margin-bottom: 10px; transition: 0.3s; cursor: pointer; text-decoration: none; display: block;
+        }
+
+        .nav-link-custom:hover { background: var(--glass-bg); color: var(--primary-neon); }
+        .table-hover tbody tr { cursor: pointer; transition: 0.2s; }
+        .table-hover tbody tr:hover { background: rgba(0, 242, 255, 0.1) !important; }
+        .modal-content { background: #0a0a1a; border: 1px solid var(--primary-neon); border-radius: 20px; color: #fff; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="bg-animate"></div>
+
+    <!-- LOGIN -->
+    <div id="loginSection" class="container">
+        <div class="login-container glass-card" style="max-width: 450px; margin: 6% auto; padding: 40px;">
+            <div class="brand-logo">INADIMPLÊNCIA ÓTICAS</div>
+            <div id="loginError" class="alert alert-danger hidden text-center">E-mail ou senha incorretos.</div>
+            <form id="loginForm">
+                <div class="mb-3"><label class="small">E-MAIL</label><input type="email" id="userEmail" class="form-control" required></div>
+                <div class="mb-4"><label class="small">SENHA</label><input type="password" id="userPass" class="form-control" required></div>
+                <button type="submit" class="btn btn-neon w-100">Entrar</button>
+                <div class="text-center mt-3"><a href="javascript:void(0)" onclick="showRegister()" class="small text-info text-decoration-none">Criar novo acesso</a></div>
+            </form>
+
+            <div class="text-center mt-4 pt-3 border-top border-secondary small text-white-50">
+                Desenvolvido por: <strong>Girlanildo</strong><br>Contato: (97) 991632841
+            </div>
+
+
+        </div>
+    </div>
+
+    <!-- REGISTRO -->
+    <div id="registerSection" class="container hidden">
+        <div class="login-container glass-card" style="max-width: 450px; margin: 6% auto; padding: 40px;">
+            <div class="brand-logo">NOVO OPERADOR</div>
+            <form id="registerForm">
+                <div class="mb-3"><label class="small">NOME COMPLETO</label><input type="text" id="regName" class="form-control" required></div>
+                <div class="mb-3"><label class="small">E-MAIL</label><input type="email" id="regEmail" class="form-control" required></div>
+                <div class="mb-4"><label class="small">SENHA</label><input type="password" id="regPass" class="form-control" required></div>
+                <button type="submit" class="btn btn-neon w-100">Registrar</button>
+                <button type="button" class="btn btn-link btn-sm w-100 mt-2 text-white-50" onclick="showLogin()">Voltar ao Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN DASHBOARD -->
+    <div id="mainSection" class="container-fluid hidden p-0">
+        <div class="row g-0">
+            <nav class="col-md-2 d-none d-md-block sidebar p-4">
+                <div class="brand-logo mb-4" style="font-size: 1rem; text-align: left;">SISTEMA GESTÃO</div>
+                <div class="mb-4 p-3 glass-card"><strong id="currentUserDisplay" class="text-info small"></strong></div>
+                <div class="nav flex-column">
+                    <a class="nav-link-custom" onclick="switchTab('lista')">📊 Meus Registros</a>
+                    <a class="nav-link-custom" onclick="switchTab('cadastro')">➕ Novo Registro</a>
+                    <a class="nav-link-custom" onclick="switchTab('relatorio')">📑 Relatório Geral</a>
+                    <a class="nav-link-custom text-danger mt-5" onclick="logout()">🔓 Sair</a>
+                </div>
+            </nav>
+
+            <main class="col-md-10 p-4 p-md-5">
+                <div id="tabLista">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="fw-bold mb-0">Consulta de Inadimplentes</h2>
+                        <div>
+                            <button class="btn btn-outline-info btn-sm" onclick="clearFilters()">🧹 Limpar</button>
+                            <button class="btn btn-outline-success btn-sm ms-2" onclick="printData()">🖨️ Imprimir</button>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-4 mb-4">
+                        <div class="row g-3">
+                            <div class="col-md-4"><label class="small text-white-50">BUSCAR POR CPF</label><input type="text" id="filterCPF" class="form-control cpf-mask" placeholder="000.000.000-00" onkeyup="renderTable()"></div>
+                            <div class="col-md-4"><label class="small text-white-50">ÓTICA</label><select id="filterOtica" class="form-select" onchange="renderTable()"><option value="">Todas</option></select></div>
+                            <div class="col-md-4"><label class="small text-white-50">STATUS</label><select id="filterStatus" class="form-select" onchange="renderTable()"><option value="">Todos</option><option value="Pendente">Pendente</option><option value="Pago">Pago</option><option value="Negociado">Negociado</option></select></div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card overflow-hidden">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0 text-white">
+                                <thead><tr><th>Cliente</th><th>CPF</th><th>Ótica</th><th>Valor</th><th>Vencimento</th><th>Status</th><th>Ações</th></tr></thead>
+                                <tbody id="inadimplentesTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CADASTRO -->
+                <div id="tabCadastro" class="hidden">
+                    <div class="glass-card p-4 p-md-5">
+                        <h2 id="formTitle" class="mb-4 fw-bold">Novo Cadastro</h2>
+                        <form id="debtForm">
+                            <input type="hidden" id="editId">
+                            <div class="row g-4">
+                                <div class="col-md-6"><label class="small text-white-50">NOME COMPLETO</label><input type="text" id="custName" class="form-control" required></div>
+                                <div class="col-md-3"><label class="small text-white-50">NASCIMENTO</label><input type="date" id="custDOB" class="form-control" required></div>
+                                <div class="col-md-3"><label class="small text-white-50">CPF</label><input type="text" id="custCPF" class="form-control cpf-mask" required></div>
+                                <div class="col-md-4"><label class="small text-white-50">ÓTICA</label><input type="text" id="debtOtica" class="form-control" required></div>
+                                <div class="col-md-4"><label class="small text-white-50">DATA COMPRA</label><input type="date" id="debtDate" class="form-control" required></div>
+                                <div class="col-md-4"><label class="small text-white-50">VENCIMENTO</label><input type="date" id="debtDue" class="form-control" required></div>
+                                <div class="col-md-4"><label class="small text-white-50">VALOR (R$)</label><input type="number" step="0.01" id="debtValue" class="form-control" required></div>
+                                <div class="col-md-4"><label class="small text-white-50">STATUS</label><select id="debtStatus" class="form-select"><option value="Pendente">Pendente</option><option value="Pago">Pago</option><option value="Negociado">Negociado</option></select></div>
+                                <div class="col-md-4 d-flex align-items-end pb-2">
+                                    <div class="form-check me-3"><input class="form-check-input" type="checkbox" id="checkSPC"><label class="small">SPC</label></div>
+                                    <div class="form-check"><input class="form-check-input" type="checkbox" id="checkProtesto"><label class="small">PROTESTO</label></div>
+                                </div>
+                                <div class="col-12"><label class="small text-white-50">OBSERVAÇÕES IMPORTANTES</label><textarea id="debtObs" class="form-control" rows="3"></textarea></div>
+                                <div class="col-12 mt-4"><button type="submit" class="btn btn-neon px-5">Salvar</button><button type="button" class="btn btn-outline-light ms-2 px-5" onclick="switchTab('lista')">Cancelar</button></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- RELATORIO -->
+                <div id="tabRelatorio" class="hidden">
+                    <h2 class="fw-bold mb-4">Relatório de Auditoria</h2>
+                    <div class="glass-card overflow-hidden">
+                        <div class="table-responsive">
+                            <table class="table mb-0 text-white">
+                                <thead><tr><th>Data</th><th>Cliente</th><th>Valor</th><th>Ótica</th><th>Operador</th></tr></thead>
+                                <tbody id="relatorioTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- MODAL DETALHES -->
+    <div class="modal fade" id="detailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content glass-card">
+                <div class="modal-header border-secondary"><h5 class="modal-title text-info fw-bold">DETALHES COMPLETOS</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body" id="modalContent"></div>
+                <div class="modal-footer border-secondary"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyB78OCFuAT9Qm-X7FPgpVZhcds6gRC7QnY",
+            authDomain: "inadimplencia-e7ac8.firebaseapp.com",
+            projectId: "inadimplencia-e7ac8",
+            storageBucket: "inadimplencia-e7ac8.firebasestorage.app",
+            messagingSenderId: "1043062755960",
+            appId: "1:1043062755960:web:f413430547e32192b5138d"
+        };
+
+        // --- COLOQUE SEU E-MAIL AQUI ---
+        const adminEmail = "SEU-EMAIL@AQUI.COM"; 
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let currentUser = null;
+        let detailsModal;
+        let allDebts = [];
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                currentUser = { name: user.displayName || 'Operador', email: user.email };
+                document.getElementById('currentUserDisplay').innerText = "Olá, " + currentUser.name;
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('mainSection').classList.remove('hidden');
+                switchTab('lista');
+            } else {
+                document.getElementById('mainSection').classList.add('hidden');
+                document.getElementById('loginSection').classList.remove('hidden');
+            }
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                await auth.signInWithEmailAndPassword(document.getElementById('userEmail').value, document.getElementById('userPass').value);
+            } catch (error) { document.getElementById('loginError').classList.remove('hidden'); }
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('regName').value;
+            try {
+                const cred = await auth.createUserWithEmailAndPassword(document.getElementById('regEmail').value, document.getElementById('regPass').value);
+                await cred.user.updateProfile({ displayName: name });
+                alert("Cadastrado com sucesso!");
+                showLogin();
+            } catch (error) { alert("Erro: " + error.message); }
+        });
+
+        async function logout() { await auth.signOut(); }
+
+        function applyCPFMask(v) {
+            v = v.replace(/\D/g, "");
+            if (v.length > 11) v = v.slice(0, 11);
+            return v.replace(/(\d{3})(\d)/, "$1.$2").replace(/(\d{3})(\d)/, "$1.$2").replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+        }
+        document.querySelectorAll('.cpf-mask').forEach(i => i.addEventListener('input', e => e.target.value = applyCPFMask(e.target.value)));
+
+        document.getElementById('debtForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const editId = document.getElementById('editId').value;
+            const debtData = {
+                customerName: document.getElementById('custName').value,
+                dob: document.getElementById('custDOB').value,
+                cpf: document.getElementById('custCPF').value,
+                store: document.getElementById('debtOtica').value,
+                purchaseDate: document.getElementById('debtDate').value,
+                dueDate: document.getElementById('debtDue').value,
+                amount: document.getElementById('debtValue').value,
+                status: document.getElementById('debtStatus').value,
+                spc: document.getElementById('checkSPC').checked,
+                protesto: document.getElementById('checkProtesto').checked,
+                obs: document.getElementById('debtObs').value,
+                userName: currentUser.name,
+                userEmail: currentUser.email,
+                createdAt: editId ? null : new Date().toLocaleDateString('pt-BR')
+            };
+            try {
+                if (editId) { delete debtData.createdAt; await db.collection('debts').doc(editId).update(debtData); }
+                else { await db.collection('debts').add(debtData); }
+                switchTab('lista');
+            } catch (error) { alert(error.message); }
+        });
+
+        async function renderTable() {
+            const tbody = document.getElementById('inadimplentesTable');
+            const fCPF = document.getElementById('filterCPF').value;
+            const fOtica = document.getElementById('filterOtica').value;
+            const fStatus = document.getElementById('filterStatus').value;
+            
+            try {
+                const snapshot = await db.collection('debts').get();
+                allDebts = [];
+                snapshot.forEach(doc => allDebts.push({ id: doc.id, ...doc.data() }));
+                
+                updateOticaFilter();
+                tbody.innerHTML = '';
+                const filtered = allDebts.filter(d => d.cpf.includes(fCPF) && (fOtica === "" || d.store === fOtica) && (fStatus === "" || d.status === fStatus));
+
+                filtered.forEach(d => {
+                    const isAdmin = (currentUser.email === adminEmail);
+                    const isCreator = (d.userEmail === currentUser.email);
+                    
+                    // LÓGICA DE VISIBILIDADE DO VALOR
+                    const showValue = isAdmin || isCreator;
+                    const valDisplay = showValue 
+                        ? `R$ ${parseFloat(d.amount).toLocaleString('pt-BR', {minimumFractionDigits: 2})}` 
+                        : `<span class="blur-text">R$ 999,99</span>`;
+
+                    tbody.innerHTML += `
+                        <tr onclick="viewDetails('${d.id}')">
+                            <td><strong>${d.customerName}</strong></td>
+                            <td>${d.cpf}</td>
+                            <td>${d.store}</td>
+                            <td>${valDisplay}</td>
+                            <td>${new Date(d.dueDate + 'T00:00:00').toLocaleDateString('pt-BR')}</td>
+                            <td><span class="badge ${d.status === 'Pago' ? 'bg-success' : 'bg-danger'}">${d.status}</span></td>
+                            <td>
+                                ${showValue ? `
+                                <button class="btn btn-sm btn-outline-info" onclick="event.stopPropagation(); editDebt('${d.id}')">✏️</button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="event.stopPropagation(); deleteDebt('${d.id}')">🗑️</button>
+                                ` : '🔒'}
+                            </td>
+                        </tr>`;
+                });
+            } catch (error) { console.error(error); }
+        }
+
+        async function deleteDebt(id) {
+            if(confirm("Deseja excluir este registro permanentemente?")) {
+                await db.collection('debts').doc(id).delete();
+                renderTable();
+            }
+        }
+
+        function viewDetails(id) {
+            const d = allDebts.find(debt => debt.id === id);
+            const canSee = (currentUser.email === adminEmail || d.userEmail === currentUser.email);
+            const val = canSee ? `R$ ${parseFloat(d.amount).toLocaleString('pt-BR')}` : `<span class="blur-text">R$ 00,00</span>`;
+            
+            document.getElementById('modalContent').innerHTML = `
+                <div class="row g-3">
+                    <div class="col-md-6"><p class="small text-white-50 mb-0">NOME</p><h5>${d.customerName}</h5></div>
+                    <div class="col-md-6"><p class="small text-white-50 mb-0">CPF</p><h5>${d.cpf}</h5></div>
+                    <hr class="border-secondary">
+                    <div class="col-md-4"><p class="small text-white-50 mb-0">ÓTICA</p><p>${d.store}</p></div>
+                    <div class="col-md-4"><p class="small text-white-50 mb-0">DÍVIDA</p><p class="text-info fw-bold">${val}</p></div>
+                    <div class="col-md-4"><p class="small text-white-50 mb-0">STATUS</p><p>${d.status}</p></div>
+                    <div class="col-md-4"><p class="small text-white-50 mb-0">COMPRA</p><p>${new Date(d.purchaseDate + 'T00:00:00').toLocaleDateString('pt-BR')}</p></div>
+                    <div class="col-md-4"><p class="small text-white-50 mb-0">VENCIMENTO</p><p>${new Date(d.dueDate + 'T00:00:00').toLocaleDateString('pt-BR')}</p></div>
+                    <div class="col-md-4"><p class="small text-white-50 mb-0">NASCIMENTO</p><p>${new Date(d.dob + 'T00:00:00').toLocaleDateString('pt-BR')}</p></div>
+                    <hr class="border-secondary">
+                    <div class="col-md-6"><p class="small text-white-50 mb-0">SPC</p><p>${d.spc?'✅ Sim':'❌ Não'}</p></div>
+                    <div class="col-md-6"><p class="small text-white-50 mb-0">PROTESTO</p><p>${d.protesto?'✅ Sim':'❌ Não'}</p></div>
+                    <div class="col-12 glass-card p-3"><p class="small text-info fw-bold mb-1">OBSERVAÇÕES:</p><p style="white-space:pre-wrap">${d.obs||'...'}</p></div>
+                    <div class="text-end small text-white-50 mt-3">Registrado por: ${d.userName} em ${d.createdAt}</div>
+                </div>`;
+            if(!detailsModal) detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
+            detailsModal.show();
+        }
+
+        function renderReport() {
+            const tbody = document.getElementById('relatorioTable'); 
+            tbody.innerHTML = '';
+            allDebts.forEach(d => {
+                const canSee = (currentUser.email === adminEmail || d.userEmail === currentUser.email);
+                const val = canSee ? `R$ ${d.amount}` : `***`;
+                tbody.innerHTML += `<tr><td>${d.createdAt}</td><td>${d.customerName}</td><td>${val}</td><td>${d.store}</td><td>${d.userName}</td></tr>`;
+            });
+        }
+
+        function printData() {
+            const isAdmin = (currentUser.email === adminEmail);
+            const filtered = allDebts.filter(d => d.cpf.includes(document.getElementById('filterCPF').value));
+
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html><head><style>table{width:100%;border-collapse:collapse;} th,td{border:1px solid #000;padding:8px;}</style></head>
+                <body><h2>Relatório de Inadimplência</h2><table>
+                <thead><tr><th>Nome</th><th>CPF</th><th>Ótica</th><th>Valor</th><th>Status</th></tr></thead>
+                <tbody>${filtered.map(d => {
+                    const canSee = isAdmin || d.userEmail === currentUser.email;
+                    return `<tr><td>${d.customerName}</td><td>${d.cpf}</td><td>${d.store}</td><td>${canSee?'R$ '+d.amount:'---'}</td><td>${d.status}</td></tr>`
+                }).join('')}</tbody></table></body></html>
+            `);
+            printWindow.document.close();
+            setTimeout(() => { printWindow.print(); printWindow.close(); }, 500);
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('main > div').forEach(d => d.classList.add('hidden'));
+            document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.remove('hidden');
+            if(tab === 'lista') renderTable();
+            if(tab === 'relatorio') renderReport();
+            if(tab === 'cadastro' && !document.getElementById('editId').value) {
+                document.getElementById('debtForm').reset();
+                document.getElementById('editId').value = "";
+                document.getElementById('formTitle').innerText = "Novo Cadastro";
+            }
+        }
+
+        function updateOticaFilter() {
+            const select = document.getElementById('filterOtica');
+            const oticas = [...new Set(allDebts.map(d => d.store))].sort();
+            const current = select.value;
+            select.innerHTML = '<option value="">Todas</option>';
+            oticas.forEach(o => select.innerHTML += `<option value="${o}" ${current===o?'selected':''}>${o}</option>`);
+        }
+
+        function editDebt(id) {
+            const d = allDebts.find(debt => debt.id === id);
+            document.getElementById('editId').value = d.id;
+            document.getElementById('custName').value = d.customerName;
+            document.getElementById('custDOB').value = d.dob;
+            document.getElementById('custCPF').value = d.cpf;
+            document.getElementById('debtOtica').value = d.store;
+            document.getElementById('debtDate').value = d.purchaseDate;
+            document.getElementById('debtDue').value = d.dueDate;
+            document.getElementById('debtValue').value = d.amount;
+            document.getElementById('debtStatus').value = d.status;
+            document.getElementById('checkSPC').checked = d.spc;
+            document.getElementById('checkProtesto').checked = d.protesto;
+            document.getElementById('debtObs').value = d.obs;
+            document.getElementById('formTitle').innerText = "Editar Registro";
+            switchTab('cadastro');
+        }
+
+        function showRegister() { document.getElementById('loginSection').classList.add('hidden'); document.getElementById('registerSection').classList.remove('hidden'); }
+        function showLogin() { document.getElementById('registerSection').classList.add('hidden'); document.getElementById('loginSection').classList.remove('hidden'); }
+        function clearFilters() { document.getElementById('filterCPF').value = ''; document.getElementById('filterOtica').value = ''; document.getElementById('filterStatus').value = ''; renderTable(); }
+    </script>
+</body>
+</html>
